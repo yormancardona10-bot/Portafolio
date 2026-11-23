@@ -1,0 +1,275 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+body {
+  @apply bg-void font-sans text-subtle antialiased;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* === Fondo ambiental con orbes de color === */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 50% at 10% -5%, rgba(163, 230, 53, 0.08), transparent 50%),
+    radial-gradient(ellipse 50% 45% at 90% 5%, rgba(34, 211, 238, 0.07), transparent 45%),
+    radial-gradient(ellipse 40% 40% at 50% 100%, rgba(167, 139, 250, 0.06), transparent 50%);
+}
+
+/* === Grilla de puntos sutil === */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent 80%);
+  mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+
+::selection {
+  background: rgba(163, 230, 53, 0.25);
+  color: #f1f5f9;
+}
+
+section[id] {
+  scroll-margin-top: 6.5rem;
+}
+
+:focus-visible {
+  outline: 2px solid #A3E635;
+  outline-offset: 3px;
+}
+
+/* === Componentes reutilizables === */
+@layer components {
+  .section-shell {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+
+  .section-padding {
+    @apply py-24 sm:py-32;
+  }
+
+  /* Tarjeta glassmorphic con borde luminoso */
+  .glass-card {
+    @apply relative rounded-2xl bg-surface/80 backdrop-blur-xl;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 25px 60px -32px rgba(0, 0, 0, 0.9);
+  }
+
+  .glass-card-hover {
+    @apply transition-all duration-500;
+  }
+
+  .glass-card-hover:hover {
+    border-color: rgba(163, 230, 53, 0.15);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 0 0 1px rgba(163, 230, 53, 0.08),
+      0 25px 60px -20px rgba(163, 230, 53, 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Bento item — versión compacta */
+  .bento-item {
+    @apply glass-card overflow-hidden;
+  }
+
+  .bento-item-hover {
+    @apply glass-card-hover;
+  }
+
+  /* Botones */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2.5 rounded-xl bg-lime px-6 py-3.5 text-sm font-bold text-void transition-all duration-300;
+  }
+
+  .btn-primary:hover {
+    background: #BEF264;
+    transform: translateY(-2px);
+    box-shadow: 0 0 40px -8px rgba(163, 230, 53, 0.6);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2.5 rounded-xl px-6 py-3.5 text-sm font-semibold text-ink transition-all duration-300;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(34, 211, 238, 0.3);
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px -12px rgba(34, 211, 238, 0.4);
+  }
+
+  /* Texto gradiente */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #A3E635 0%, #22D3EE 50%, #A78BFA 100%);
+  }
+
+  .gradient-text-lime {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #A3E635, #BEF264);
+  }
+
+  /* Skip link accesibilidad */
+  .skip-link {
+    @apply fixed left-4 z-[100] rounded-lg bg-lime px-4 py-2 text-sm font-semibold text-void;
+    top: -5rem;
+    transition: top 0.2s ease;
+  }
+
+  .skip-link:focus {
+    top: 1rem;
+  }
+
+  /* Project card con efecto radial al cursor */
+  .project-card {
+    isolation: isolate;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(163, 230, 53, 0.1),
+      rgba(34, 211, 238, 0.05) 40%,
+      transparent 70%
+    );
+    transition: opacity 0.4s ease;
+  }
+
+  .project-card:hover::before,
+  .project-card:focus-within::before {
+    opacity: 1;
+  }
+
+  /* Marquee */
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 34s linear infinite;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Badge animado shimmer */
+  .badge-shimmer {
+    background: linear-gradient(
+      110deg,
+      rgba(163, 230, 53, 0.15) 0%,
+      rgba(163, 230, 53, 0.05) 40%,
+      rgba(163, 230, 53, 0.15) 60%,
+      rgba(163, 230, 53, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* Línea decorativa con gradiente */
+  .line-gradient {
+    @apply h-px;
+    background: linear-gradient(to right, transparent, rgba(163, 230, 53, 0.3), rgba(34, 211, 238, 0.3), transparent);
+  }
+
+  /* Orb de fondo */
+  .orb {
+    position: absolute;
+    border-radius: 9999px;
+    pointer-events: none;
+    filter: blur(100px);
+  }
+}
+
+/* === Scroll reveal === */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #06080D;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border: 2px solid #06080D;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A3E635;
+}
+
+/* === Accesibilidad: movimiento reducido === */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .marquee-track {
+    animation: none !important;
+  }
+}
